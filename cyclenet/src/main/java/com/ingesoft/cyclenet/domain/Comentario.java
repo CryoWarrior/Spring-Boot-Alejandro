@@ -35,4 +35,10 @@ public class Comentario {
     @OneToMany(mappedBy = "comentario")
     protected List<Calificacion> calificaciones = new ArrayList<>();
 
+    public Comentario(String mensaje, Date fecha, Usuario usuario , Publicacion publicacion){
+        this.mensaje = mensaje;
+        this.fecha = fecha;
+        this.usuario = usuario;
+        this.publicacion = publicacion;
+    }
 }

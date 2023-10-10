@@ -46,18 +46,39 @@ public class CasosDeUsoUsuarioTest {
     }
 
     //Casos de uso
+    //Test login
     @Test
-    public void pruebaLogin(){
+    public void pruebaLoginFallida(){
         try {
             casosDeUsoUsuarios.iniciarSesion("X", "Y");
             fail("Inicio sesion");
             assertEquals(1, 0, "Fallo2");                 
         } catch (Exception e) {
             // TODO: handle exception
-            fail("No inicio sesion");
+            fail("OK: No inicio sesion");
         }
     }
 
+    public void pruebaLoginAcertada(){
+        try {
+            //arange
+            repositorioUsuario.deleteAll();
+            Usuario usuario = new Usuario("holaa","HOLA","arma159","NOO","si");
+            repositorioUsuario.save(usuario);
+
+            //act
+            casosDeUsoUsuarios.iniciarSesion("holaa", "armaa159");
+
+            //assert
+            fail("OK: Se logro iniciar sesion");
+
+        } catch (Exception e) {
+            fail("No se logro iniciar sesion :(");
+        }
+    }
+
+
+    //Tests registrar usuario
     @Test
     public void registrarUsuarioSinErrores(){
         try {
@@ -112,7 +133,6 @@ public class CasosDeUsoUsuarioTest {
         
             //Assert
             fail("Dejo grabar usuario con una contrasena de menos de 5 letras");
-
         } catch (ExcepcionUsuarios e) {
             // TODO: handle exception
             fail("OK - No dejo grabar usuario con contrasena de menos de lettras ");
