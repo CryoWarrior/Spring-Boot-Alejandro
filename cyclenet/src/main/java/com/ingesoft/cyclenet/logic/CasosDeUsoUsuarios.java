@@ -1,9 +1,7 @@
 package com.ingesoft.cyclenet.logic;
 
 import java.util.Optional;
-import java.util.Scanner;
 
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
