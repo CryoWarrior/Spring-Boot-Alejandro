@@ -1,4 +1,4 @@
-package Domain;
+package com.ingesoft.cyclenet.domain;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.ingesoft.cyclenet.dataAccess.RepositorioComentario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
-import com.ingesoft.cyclenet.domain.Publicacion;
-import com.ingesoft.cyclenet.domain.Usuario;
 
 import jakarta.transaction.Transactional;
 
@@ -138,6 +136,87 @@ public class ComentarioTests {
             Publicacion publicacionEnBD = usuarioEnBD.getPublicaciones().get(0);
             assertNotNull(publicacionEnBD, "La primera publicación del usuario en BD es NULL");
             assertEquals(publicacionEnBD.getMensaje(), "Hola mundo", "El mensaje de la publicación en BD no coincide");
+
+        } catch (Exception e) {
+            // algún error?
+            fail("La prueba falla", e);
+        }
+
+    }
+
+    // Instrucciones para crear un usuario, publicacion y comentario 
+    // -- usando solo JPA
+    @Test
+    @Transactional
+    public void creaUsuarioPublicacionYComentario() {
+
+        try {
+
+            // -- Usuario
+
+            // crea el objeto de tipo usuario
+            Usuario usuario = new Usuario(
+                "bill",
+                "Bill Gates",
+                "ILoveApple",
+                "billg@microsoft.com",
+                "300"
+            );
+
+            // almacena el usuario y obtiene el objeto ya "enlazado" a la base de datos
+            // el nuevo objeto tiene, por ejemplo, valores generados por la base de datos
+            // y colecciones que se conectan a la base de datos
+            usuario = usuarios.save(usuario);
+
+            // revisa el usuario
+            assertNotNull(usuario, "El usuario aparece en null");
+            assertEquals(usuario.getNombreUsuario(), "bill", "El nombre del usuario no coincide");
+
+            // -- Publicación
+
+            // crea el objeto publicacion
+            Publicacion publicacion = new Publicacion(
+                "Hola mundo",
+                false,
+                false,
+                new Date(),
+                usuario
+            );
+
+            // almacena el objeto y obtiene el objeto enlazado a la base de datos
+            publicacion = publicaciones.save(publicacion);
+
+            // actualiza el objeto de usuarios (relación bidireccional)
+            usuario.getPublicaciones().add(publicacion);
+            usuario = usuarios.save(usuario);
+
+            // revisa la publicacion
+            assertNotNull(publicacion, "La publicacion aparece en null");
+            assertNotNull(publicacion.getId(), "No asignó el id generado por la base de datos");
+
+            // -- Comentario
+
+            Comentario comentario = new Comentario(
+                "Buena publicación",
+                new Date(),
+                usuario,
+                publicacion  
+            );
+
+            // almacena el objeto
+            usuario.getComentarios().add(comentario);
+            usuario = usuarios.save(usuario);
+
+            publicacion.getComentarios().add(comentario);
+            publicacion = publicaciones.save(publicacion);
+
+            comentario = comentarios.save(comentario);
+
+            // revisa el comentario
+            assertNotNull(comentario, "El comentario aparece en null");
+            assertNotNull(comentario.getId(), "No asignó el id generado al comentario");
+
+
 
         } catch (Exception e) {
             // algún error?

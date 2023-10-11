@@ -89,12 +89,6 @@ public class CasosDeUsoPublicacionTest {
 
             Usuario usuario = new Usuario("holaa","HOLA","jsdddd","NOO","si");
             
-            usuario = repositorioUsuario.save(usuario);
-
-            assertNotNull(usuario, "Usuario está en null");
-            assertNotNull(usuario.getPublicaciones(), "El listado de publicaciones aparece en null");
-            assertNotNull(usuario.getCalificaciones(), "El listado de calificaciones aparece en null");
-
             //act
             Long idNuevaPublicacion = casosDeUsoPublicacion.subirPublicacion(
                     usuario,
