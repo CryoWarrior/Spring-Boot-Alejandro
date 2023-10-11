@@ -6,6 +6,9 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.FetchType;
+
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,23 +28,18 @@ public class Usuario {
     protected String contraseña;
     protected String correo;
     protected String celular;
+
     protected boolean log = false;
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     protected List<Comentario> comentarios = new ArrayList<>();
     
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     protected List<Publicacion> publicaciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "usuario")
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     protected List<Calificacion> calificaciones = new ArrayList<>();
-    /*
-    @OneToMany(mappedBy = "usuario")
-    protected ArrayList<Usuario> seguidos;
 
-    @OneToMany(mappedBy = "usuario")
-    protected ArrayList<Usuario> seguidores;
- */
     public Usuario(String nombreUsuario, String nombre, String contraseña, String correo, String celular){
         this.nombreUsuario = nombreUsuario;
         this.nombre = nombre;
@@ -49,10 +47,6 @@ public class Usuario {
         this.correo = correo;
         this.celular = celular;
         this.log = true;
-        /* 
-        this.seguidos = new ArrayList<>();
-        this.seguidores = new ArrayList<>();
-        */
     }
 
 }

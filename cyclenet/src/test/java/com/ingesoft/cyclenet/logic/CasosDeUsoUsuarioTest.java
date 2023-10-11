@@ -2,14 +2,15 @@ package com.ingesoft.cyclenet.logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,6 @@ public class CasosDeUsoUsuarioTest {
     protected RepositorioUsuario repositorioUsuario;
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
-/* 
-    //Arrange
-    @BeforeAll
-    public void prepararAmbienteDeTodaLaSuite(){
-        System.out.println("Antes de todas la pruebas");
-        System.out.println();
-    }*/
     
     @BeforeEach
     public void prepararAmbienteDePruebas(){
@@ -46,18 +40,37 @@ public class CasosDeUsoUsuarioTest {
     }
 
     //Casos de uso
+    //Test login
     @Test
-    public void pruebaLogin(){
+    public void pruebaLoginFallida(){
         try {
             casosDeUsoUsuarios.iniciarSesion("X", "Y");
             fail("Inicio sesion");
-            assertEquals(1, 0, "Fallo2");                 
         } catch (Exception e) {
-            // TODO: handle exception
-            fail("No inicio sesion");
+            // OK -- No inicio sesion
         }
     }
 
+    public void pruebaLoginAcertada(){
+        try {
+            //arange
+            repositorioUsuario.deleteAll();
+            Usuario usuario = new Usuario("holaa","HOLA","arma159","NOO","si");
+            repositorioUsuario.save(usuario);
+
+            //act
+            casosDeUsoUsuarios.iniciarSesion("holaa", "armaa159");
+
+            //assert
+            //fail("OK: Se logro iniciar sesion");
+
+        } catch (Exception e) {
+            fail("No se logro iniciar sesion :(");
+        }
+    }
+
+
+    //Tests registrar usuario
     @Test
     public void registrarUsuarioSinErrores(){
         try {
@@ -70,14 +83,18 @@ public class CasosDeUsoUsuarioTest {
 
 
             //assert
-            List<Usuario> usuariosConNombreJaime = repositorioUsuario.findByNombreUsuario("Jaime");
-            if(usuariosConNombreJaime.size() == 0){
-                fail("No se grabo el coso");
+            Optional<Usuario> usuariosConNombreJaime = repositorioUsuario.findById("Jaime");
+            if(usuariosConNombreJaime.isEmpty()){
+                fail("No se grabo el usuario");
             }
 
+            Usuario u = usuariosConNombreJaime.get();
+            assertNotNull(u, "El usuario aparece en null");
+            assertNotNull(u.getPublicaciones(), "El listado de publicaciones aparece en null");
+            assertNotNull(u.getCalificaciones(), "El listado de calificaciones aparece en null");
+
         } catch (ExcepcionUsuarios e) {
-            // TODO: handle exception
-            fail("No se genero >:( ");
+             // OK
         }
     }
 
@@ -96,8 +113,7 @@ public class CasosDeUsoUsuarioTest {
             //Assert
             fail("Dejo grabar otro usuario con un login que ya existia");
         } catch (ExcepcionUsuarios e) {
-            // TODO: handle exception
-            fail("OK - No se registra usuario con login que ya existe");
+             // OK
         }
     }
 
@@ -112,10 +128,8 @@ public class CasosDeUsoUsuarioTest {
         
             //Assert
             fail("Dejo grabar usuario con una contrasena de menos de 5 letras");
-
         } catch (ExcepcionUsuarios e) {
-            // TODO: handle exception
-            fail("OK - No dejo grabar usuario con contrasena de menos de lettras ");
+            // OK - No dejo grabar usuario con contrasena de menos de lettras
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ingesoft.cyclenet.domain;
 
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -24,13 +25,13 @@ public class Calificacion {
 
     protected Boolean esDeComentario;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     protected Usuario usuario;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     protected Publicacion publicacion;
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     protected Comentario comentario;
     
     public Calificacion(int numCalificacion, Usuario usuario, Publicacion publicacion){
@@ -50,4 +51,5 @@ public class Calificacion {
         this.publicacion = null;
         this.comentario = comentario;
     }
+    
 }
