@@ -1,9 +1,7 @@
 package com.ingesoft.cyclenet.logic;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,26 +22,38 @@ public class CasosDeUsoPublicacionTest {
 
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
+
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
 
     @Test
     public void pruebaSubirPublicacionExitosamente(){
         try {
+
             //arrange
             repositorioPublicacion.deleteAll();
             repositorioUsuario.deleteAll();
+
             Usuario usuario = new Usuario("holaa","HOLA","jsdddd","NOO","si");
-            repositorioUsuario.save(usuario);
+            
+            // actualiza el usuario con la información luego de guardar en la base de datos
+            usuario = repositorioUsuario.save(usuario);
+
+            assertNotNull(usuario, "Usuario está en null");
+            assertNotNull(usuario.getPublicaciones(), "El usuario tiene una lista de publicaciones en null");
 
             //act
-            casosDeUsoPublicacion.subirPublicacion("holaa","Hola a todos", false, false);
+            casosDeUsoPublicacion.subirPublicacion(
+                "holaa",
+                "Hola a todos", 
+                false, 
+                false);
 
             //assert
-            //fail("OK: Se logro subir una publicacion exitosamente");
+            // OK: Se logro subir una publicacion exitosamente"
         
         } catch (Exception e) {
-            fail("No se logro guardar una publicacion");
+            fail("No se logro guardar una publicacion", e);
         }
     }
 
@@ -51,6 +61,7 @@ public class CasosDeUsoPublicacionTest {
     public void pruebaSubirPublicacionConUnUsuarioQueNoExiste(){
         try {
             //arrange
+            System.out.println("Segundo caso");
             repositorioPublicacion.deleteAll();
             repositorioUsuario.deleteAll();
 

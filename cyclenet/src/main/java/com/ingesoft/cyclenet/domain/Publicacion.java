@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,11 +34,11 @@ import lombok.Setter;
     @Temporal(TemporalType.DATE)
     protected Date fecha;
 
-    @OneToMany(mappedBy = "publicacion")
-    protected List<Comentario> comentarios = new ArrayList<>();;
-
     @ManyToOne
     protected Usuario usuario;
+
+    @OneToMany(mappedBy = "publicacion")
+    protected List<Comentario> comentarios = new ArrayList<>();
 
     @OneToMany(mappedBy = "publicacion")
     protected List<Calificacion> calificaciones = new ArrayList<>();

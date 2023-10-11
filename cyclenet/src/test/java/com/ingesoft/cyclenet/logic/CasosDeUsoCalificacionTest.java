@@ -45,11 +45,14 @@ public class CasosDeUsoCalificacionTest {
     @Test
     public void pruebaSubirCalificacionPublicacionExitosamente(){
         try {
+
             //Arrange 
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
-            repositorioUsuario.save(usuario);
+            usuario = repositorioUsuario.save(usuario);
+
             Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
-            repositorioPublicacion.save(publicacion);
+            publicacion = repositorioPublicacion.save(publicacion);
+            
             //Act
             casosDeUsoCalificacion.realizarCalificacionPublicacion(usuario, 3, publicacion);
 
@@ -68,7 +71,11 @@ public class CasosDeUsoCalificacionTest {
             repositorioUsuario.save(usuario);
             Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
             repositorioPublicacion.save(publicacion);
-            Comentario comentario = new Comentario("No, asi no es",Date.valueOf(LocalDate.now()),usuario,publicacion);
+            Comentario comentario = new Comentario(
+                "No, asi no es",
+                Date.valueOf(LocalDate.now()),
+                usuario,
+                publicacion);
             repositorioComentario.save(comentario);
 
             //Act

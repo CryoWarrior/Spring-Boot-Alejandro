@@ -1,0 +1,18 @@
+# Configuración para Gitpod
+
+# Tareas a ejecutar al iniciar el workspace
+tasks:
+  - name: Configura Java
+    before: sdk default java 17.0.8.fx-zulu
+
+# Extensiones para Visual Studio Code
+vscode:
+  extensions:
+    - redhat.java@1.21.0
+    - vscjava.vscode-maven
+    - vscjava.vscode-java-dependency
+    - vscjava.vscode-java-test
+    - vscjava.vscode-java-debug
+    - vscjava.vscode-spring-initializr
+    - vscjava.vscode-spring-boot-dashboard
+    - vmware.vscode-spring-boot

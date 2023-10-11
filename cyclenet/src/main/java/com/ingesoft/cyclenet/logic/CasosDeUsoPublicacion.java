@@ -1,7 +1,7 @@
 package com.ingesoft.cyclenet.logic;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 import java.sql.Date;
 
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
@@ -17,29 +17,45 @@ public class CasosDeUsoPublicacion {
 
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
+
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
 
     public void subirPublicacion(String nombreUsuario, String mensaje, Boolean foto, Boolean lugar) throws ExcepcionUsuarios {
-        //Validar usuario
-        List<Usuario> listasUsuarios = repositorioUsuario.findByNombreUsuario(nombreUsuario);
-        if(listasUsuarios.size() == 0){
+
+        // Validar usuario
+        Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
+        if(optionalUsuario.isEmpty()){
             throw new ExcepcionUsuarios("Este usuario no existe");
         }
 
-        Usuario usuario = listasUsuarios.get(0);
+        Usuario usuario = optionalUsuario.get();
+
+        System.out.println("Usuario = " + usuario);
+        System.out.println("Publicaciones = " + usuario.getPublicaciones());
 
         //Guardar publicación
         Date fecha = Date.valueOf(LocalDate.now());
         Publicacion publicacion = new Publicacion(mensaje, foto, lugar, fecha, usuario);
         
-        usuario.getPublicaciones().add(publicacion);
-        repositorioPublicacion.save(publicacion);
+        try {
+            publicacion = repositorioPublicacion.save(publicacion);
+        } catch(Exception e) {
+            throw new ExcepcionUsuarios("Error: No se pudo guardar la publicacion", e);
+        }
         
+        try {
+            usuario.getPublicaciones().add(publicacion);        
+        } catch (Exception e) {
+            throw new ExcepcionUsuarios("Error: No se pudo guardar el usuario",e);
+        }
+
+        /*
         if(lugar == true){
             mostrarPublicacionLugar(publicacion);
             return;
         }
+        */
 
         //Retornar datos a mostrar
          return;
