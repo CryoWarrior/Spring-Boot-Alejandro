@@ -20,16 +20,19 @@ public class CasosDeUsoPublicacion {
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
 
-    public void subirPublicacion(Usuario usuario, String mensaje, Boolean foto, Boolean lugar) throws ExcepcionUsuarios {
+    public void subirPublicacion(String nombreUsuario, String mensaje, Boolean foto, Boolean lugar) throws ExcepcionUsuarios {
+        //Validar usuario
+        List<Usuario> listasUsuarios = repositorioUsuario.findByNombreUsuario(nombreUsuario);
+        if(listasUsuarios.size() == 0){
+            throw new ExcepcionUsuarios("Este usuario no existe");
+        }
+
+        Usuario usuario = listasUsuarios.get(0);
+
         //Guardar publicación
         Date fecha = Date.valueOf(LocalDate.now());
         Publicacion publicacion = new Publicacion(mensaje, foto, lugar, fecha, usuario);
         
-        //Validar usuario
-        List<Usuario> listasUsuarios = repositorioUsuario.findByNombreUsuario(usuario.getNombreUsuario());
-        if(listasUsuarios.size() == 0){
-            throw new ExcepcionUsuarios("Este usuario no existe");
-        }
         usuario.getPublicaciones().add(publicacion);
         repositorioPublicacion.save(publicacion);
         

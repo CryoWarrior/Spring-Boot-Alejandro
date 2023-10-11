@@ -54,7 +54,7 @@ public class CasosDeUsoCalificacionTest {
             casosDeUsoCalificacion.realizarCalificacionPublicacion(usuario, 3, publicacion);
 
             //Assert
-            fail("OK: Se logro calificar la publicacion correctamente");
+            //fail("OK: Se logro calificar la publicacion correctamente");
         } catch (Exception e) {
             fail("No se califico la publicacion exitosamente");
         }
@@ -75,7 +75,7 @@ public class CasosDeUsoCalificacionTest {
             casosDeUsoCalificacion.realizarCalificacionComentario(usuario, 2, comentario);
 
             //Assert
-            fail("OK: Se logro calificar el comentario correctamente");
+            //fail("OK: Se logro calificar el comentario correctamente");
         } catch (Exception e) {
             fail("No se califico el comentario exitosamente");
         }
@@ -96,7 +96,7 @@ public class CasosDeUsoCalificacionTest {
             //Assert
             fail("Se califico la publicacion con un valor erroneo");
         } catch (Exception e) {
-            fail("OK: No se califico la publicacion con valor erroneo");
+            //fail("OK: No se califico la publicacion con valor erroneo");
         }
         
     }

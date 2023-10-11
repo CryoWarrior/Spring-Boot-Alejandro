@@ -18,17 +18,17 @@ public class CasosDeUsoUsuarios {
 
     
     
-    public void iniciarSesion(String login, String password) throws Exception{
+    public void iniciarSesion(String login, String password) throws ExcepcionUsuarios{
 
         // Valida que exista un registro con ese usuario 
         Optional<Usuario> u = repositorioUsuario.findById(login);
         if(u.isEmpty()){
-            throw new Exception("Usuario no existe");
+            throw new ExcepcionUsuarios("Usuario no existe");
         }
 
         //Valida que la contraseña es correcta
         if(!u.get().getContraseña().equals(password)){
-            throw new Exception("Contraseña no coincide"); 
+            throw new ExcepcionUsuarios("Contraseña no coincide"); 
         }
         return;
     }
@@ -36,16 +36,17 @@ public class CasosDeUsoUsuarios {
     public void registrarUsuario(String nombreUsuario, String nombre, String contraseña, String correo, String celular) throws ExcepcionUsuarios{
         
         Optional<Usuario> optional = repositorioUsuario.findById(nombreUsuario);
-        if(optional.isEmpty()){
-            if(contraseña.trim().length()<4){
-                throw new ExcepcionUsuarios("La contrasena debe tener mas de 3 letras");
-            }
-            //Guardar usuario
-            Usuario u = new Usuario(nombreUsuario, nombre, contraseña, correo, celular);
-            repositorioUsuario.save(u);
-        } else {
+        if(!optional.isEmpty()){
             throw new ExcepcionUsuarios("Nombre de usuario ya existe");
         }
+
+        if(contraseña.trim().length()<4){
+            throw new ExcepcionUsuarios("La contrasena debe tener mas de 3 letras");
+        }
+        //Guardar usuario
+        Usuario u = new Usuario(nombreUsuario, nombre, contraseña, correo, celular);
+        repositorioUsuario.save(u);
+
         return;
     }
 /* 

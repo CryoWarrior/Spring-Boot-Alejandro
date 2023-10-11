@@ -37,10 +37,10 @@ public class CasosDeUsoPublicacionTest {
             repositorioUsuario.save(usuario);
 
             //act
-            casosDeUsoPublicacion.subirPublicacion(usuario,"Hola a todos", false, false);
+            casosDeUsoPublicacion.subirPublicacion("holaa","Hola a todos", false, false);
 
             //assert
-            fail("OK: Se logro subir una publicacion exitosamente");
+            //fail("OK: Se logro subir una publicacion exitosamente");
         
         } catch (Exception e) {
             fail("No se logro guardar una publicacion");
@@ -53,16 +53,15 @@ public class CasosDeUsoPublicacionTest {
             //arrange
             repositorioPublicacion.deleteAll();
             repositorioUsuario.deleteAll();
-            Usuario usuario = new Usuario("holaa","HOLA","jsdddd","NOO","si");
 
             //act
-            casosDeUsoPublicacion.subirPublicacion(usuario,"Hola a todos", false, false);
+            casosDeUsoPublicacion.subirPublicacion("holaa","Hola a todos", false, false);
 
             //assert
-            fail("Se logro subir la publicacion publicacion  a pesar de la auscencia del usuario");
+            fail("Se logro subir la publicacion publicacion a pesar de la auscencia del usuario");
         
         } catch (Exception e) {
-            fail("OK: No se graba publicacion con usuario inexistente");
+            //fail("OK: No se graba publicacion con usuario inexistente");
         }
     }
     

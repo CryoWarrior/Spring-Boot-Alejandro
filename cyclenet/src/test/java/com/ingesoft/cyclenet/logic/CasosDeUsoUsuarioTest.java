@@ -55,7 +55,7 @@ public class CasosDeUsoUsuarioTest {
             assertEquals(1, 0, "Fallo2");                 
         } catch (Exception e) {
             // TODO: handle exception
-            fail("OK: No inicio sesion");
+            //fail("OK: No inicio sesion");
         }
     }
 
@@ -70,7 +70,7 @@ public class CasosDeUsoUsuarioTest {
             casosDeUsoUsuarios.iniciarSesion("holaa", "armaa159");
 
             //assert
-            fail("OK: Se logro iniciar sesion");
+            //fail("OK: Se logro iniciar sesion");
 
         } catch (Exception e) {
             fail("No se logro iniciar sesion :(");
@@ -118,7 +118,7 @@ public class CasosDeUsoUsuarioTest {
             fail("Dejo grabar otro usuario con un login que ya existia");
         } catch (ExcepcionUsuarios e) {
             // TODO: handle exception
-            fail("OK - No se registra usuario con login que ya existe");
+            //fail("OK - No se registra usuario con login que ya existe");
         }
     }
 
@@ -135,7 +135,7 @@ public class CasosDeUsoUsuarioTest {
             fail("Dejo grabar usuario con una contrasena de menos de 5 letras");
         } catch (ExcepcionUsuarios e) {
             // TODO: handle exception
-            fail("OK - No dejo grabar usuario con contrasena de menos de lettras ");
+            //fail("OK - No dejo grabar usuario con contrasena de menos de lettras ");
         }
     }
 
