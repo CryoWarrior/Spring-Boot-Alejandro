@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
+import com.ingesoft.cyclenet.domain.Publicacion;
 import com.ingesoft.cyclenet.domain.Usuario;
 
 @Service
@@ -59,6 +60,5 @@ public class CasosDeUsoUsuarios {
     public void realizarComentario(){
 
     }
-
 
 }
