@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ingesoft.cyclenet.logic.CasosDeUsoPublicacionTest;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
@@ -33,6 +34,7 @@ public class CasosDeUsoPublicacionTest {
     protected RepositorioUsuario repositorioUsuario;
 
     @Test
+    @Transactional
     public void pruebaSubirPublicacionExitosamente(){
         try {
 
@@ -51,9 +53,14 @@ public class CasosDeUsoPublicacionTest {
 
             //act
             Long idNuevaPublicacion = casosDeUsoPublicacion.subirPublicacion(
-                    usuario,
+                    "holaa",
                     "Hola a todos", 
                     false, false);
+            
+            
+            
+            
+            
             //assert
 
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("holaa");
@@ -86,12 +93,10 @@ public class CasosDeUsoPublicacionTest {
             System.out.println("Segundo caso");
             repositorioPublicacion.deleteAll();
             repositorioUsuario.deleteAll();
-
-            Usuario usuario = new Usuario("holaa","HOLA","jsdddd","NOO","si");
             
             //act
             Long idNuevaPublicacion = casosDeUsoPublicacion.subirPublicacion(
-                    usuario,
+                    "ss",
                     "Hola a todos", 
                     false, false);
 

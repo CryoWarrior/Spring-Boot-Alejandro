@@ -62,40 +62,41 @@ public class CasosDeUsoCalificacionTest {
             fail("No se califico la publicacion exitosamente");
         }
     }
-/*
+
     @Test
     public void pruebaSubirCalificacionComentarioExitosamente(){
         try {
             //Arrange 
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
-            repositorioUsuario.save(usuario);
+            usuario = repositorioUsuario.save(usuario);
             Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
-            repositorioPublicacion.save(publicacion);
+            publicacion = repositorioPublicacion.save(publicacion);
             Comentario comentario = new Comentario(
                 "No, asi no es",
                 Date.valueOf(LocalDate.now()),
                 usuario,
                 publicacion);
-            repositorioComentario.save(comentario);
+            comentario = repositorioComentario.save(comentario);
 
             //Act
-            casosDeUsoCalificacion.realizarCalificacionComentario(usuario, 2, comentario);
+            casosDeUsoCalificacion.realizarCalificacionComentario("camilo", 2, comentario);
 
             //Assert
             //fail("OK: Se logro calificar el comentario correctamente");
         } catch (Exception e) {
-            fail("No se califico el comentario exitosamente");
+            fail("No se califico el comentario exitosamente: ", e);
         }
     }
- */
+
     @Test
     public void pruebaSubirCalifacionFueraDeRango(){
         try {
+            System.out.println("SIGUIENTE");
             //Arrange 
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
-            repositorioUsuario.save(usuario);
+            usuario = repositorioUsuario.save(usuario);
             Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
-            repositorioPublicacion.save(publicacion);
+            publicacion = repositorioPublicacion.save(publicacion);
 
             //Act
             casosDeUsoCalificacion.realizarCalificacionPublicacion(usuario, 9, publicacion);

@@ -1,6 +1,7 @@
 package com.ingesoft.cyclenet.logic;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.sql.Date;
 
 
@@ -21,22 +22,7 @@ public class CasosDeUsoPublicacion {
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
 
-    public Long subirPublicacion(Usuario usuario, String mensaje, Boolean foto, Boolean lugar){
-
-        //Guardar publicación
-        Date fecha = Date.valueOf(LocalDate.now());
-
-        Publicacion publicacion = new Publicacion(mensaje, foto, lugar, fecha, usuario);
-        usuario.getPublicaciones().add(publicacion);
-
-        publicacion = repositorioPublicacion.save(publicacion);
-        usuario = repositorioUsuario.save(usuario);
-
-        //Retornar datos a mostrar
-         return publicacion.getId();
-    }
-/* 
-    public void subirPublicacion(String nombreUsuario, String mensaje, Boolean foto, Boolean lugar) throws ExcepcionUsuarios {
+    public Long subirPublicacion(String nombreUsuario, String mensaje, Boolean foto, Boolean lugar) throws ExcepcionUsuarios{
 
         // Validar usuario
         Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
@@ -46,13 +32,11 @@ public class CasosDeUsoPublicacion {
 
         Usuario usuario = optionalUsuario.get();
 
-        System.out.println("Usuario = " + usuario);
-        System.out.println("Publicaciones = " + usuario.getPublicaciones());
-
         //Guardar publicación
         Date fecha = Date.valueOf(LocalDate.now());
+
         Publicacion publicacion = new Publicacion(mensaje, foto, lugar, fecha, usuario);
-        
+
         try {
             publicacion = repositorioPublicacion.save(publicacion);
         } catch(Exception e) {
@@ -65,17 +49,13 @@ public class CasosDeUsoPublicacion {
             throw new ExcepcionUsuarios("Error: No se pudo guardar el usuario",e);
         }
 
-        
-        if(lugar == true){
-            mostrarPublicacionLugar(publicacion);
-            return;
-        }
-        
+        publicacion = repositorioPublicacion.save(publicacion);
+        usuario = repositorioUsuario.save(usuario);
 
         //Retornar datos a mostrar
-         return;
+         return publicacion.getId();
     }
-    */
+
     public void mostrarPublicacionLugar(Publicacion publicacion){
         //Retornar datos a mostrar
         return;

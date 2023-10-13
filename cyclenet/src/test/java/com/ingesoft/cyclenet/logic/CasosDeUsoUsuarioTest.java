@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ingesoft.cyclenet.dataAccess.RepositorioCalificacion;
+import com.ingesoft.cyclenet.dataAccess.RepositorioComentario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
 import com.ingesoft.cyclenet.domain.Usuario;
@@ -31,12 +33,19 @@ public class CasosDeUsoUsuarioTest {
     protected RepositorioUsuario repositorioUsuario;
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
-    
+    @Autowired
+    protected RepositorioCalificacion repositorioCalificacion;
+    @Autowired
+    protected RepositorioComentario repositorioComentario;
+
     @BeforeEach
     public void prepararAmbienteDePruebas(){
         System.out.println("Antes de cada prueba");
         System.out.println();
+        repositorioCalificacion.deleteAll();
+        repositorioComentario.deleteAll();
         repositorioPublicacion.deleteAll();
+
     }
 
     //Casos de uso
@@ -130,6 +139,38 @@ public class CasosDeUsoUsuarioTest {
             fail("Dejo grabar usuario con una contrasena de menos de 5 letras");
         } catch (ExcepcionUsuarios e) {
             // OK - No dejo grabar usuario con contrasena de menos de lettras
+        }
+    }
+
+    @Test
+    public void registrarUsuarioConCorreoSinArroba(){
+        try {
+            //Arrange
+            repositorioUsuario.deleteAll();
+        
+            //Act
+            casosDeUsoUsuarios.registrarUsuario("Jaime","Jaime Lombo","l232123","juan.net","31565431");
+        
+            //Assert
+            fail("Dejo grabar usuario con una correo sin arroba");
+        } catch (ExcepcionUsuarios e) {
+            // OK - No dejo grabar usuario con correo sin arroba
+        }
+    }
+
+    @Test
+    public void registrarUsuarioConCorreoSinPunto(){
+        try {
+            //Arrange
+            repositorioUsuario.deleteAll();
+        
+            //Act
+            casosDeUsoUsuarios.registrarUsuario("Jaime","Jaime Lombo","l232123","juan@homral","31565431");
+        
+            //Assert
+            fail("Dejo grabar usuario con una correo sin punto");
+        } catch (ExcepcionUsuarios e) {
+            // OK - No dejo grabar usuario con  con correo sin punto
         }
     }
 
