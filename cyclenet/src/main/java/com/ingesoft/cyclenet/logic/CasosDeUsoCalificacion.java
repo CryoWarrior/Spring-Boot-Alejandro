@@ -25,10 +25,22 @@ public class CasosDeUsoCalificacion {
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
 
-    public void realizarCalificacionPublicacion(Usuario usuario, int valorCalificado, Publicacion publicacion) throws Exception{
+    public void realizarCalificacionPublicacion(String nombreUsuario, int valorCalificado, Long idPublicacion) throws Exception{
         if(valorCalificado < 1 || valorCalificado > 5){
             throw new Exception("La calificacion debe estar entre 1 y 5");
         }
+
+        Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
+        if(optionalUsuario.isEmpty()){
+            throw new ExcepcionUsuarios("Este usuario no existe");
+        }
+        Usuario usuario = optionalUsuario.get();
+
+        Optional<Publicacion> optionalPublicacion = repositorioPublicacion.findById(idPublicacion);
+        if(optionalUsuario.isEmpty()){
+            throw new ExcepcionPublicacion("Esta publicaion no existe");
+        }
+        Publicacion publicacion = optionalPublicacion.get();
 
         Calificacion calificacion = new Calificacion(valorCalificado, usuario ,publicacion);
         

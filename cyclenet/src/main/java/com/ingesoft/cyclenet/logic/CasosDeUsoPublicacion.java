@@ -80,15 +80,22 @@ public class CasosDeUsoPublicacion {
         }
     }
 
-    public void mostrarPublicaciones(Usuario u)throws ExcepcionPublicacion{
+    public void mostrarPublicaciones(String nombreUsuario)throws ExcepcionPublicacion, ExcepcionUsuarios{
+        // Validar usuario
+        Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
+        if(optionalUsuario.isEmpty()){
+            throw new ExcepcionUsuarios("Este usuario no existe");
+        }
 
-        if(u.getPublicaciones().isEmpty()){
+        Usuario usuario = optionalUsuario.get();
+
+        if(usuario.getPublicaciones().isEmpty()){
             throw new ExcepcionPublicacion("Este usuario no ha hecho ninguna publicacion.");
         }
 
-        System.out.println("Publicaiones de " + u.getNombre() + ":");
+        System.out.println("Publicaiones de " + usuario.getNombre() + ":");
         
-        for (Publicacion p : u.getPublicaciones()) {
+        for (Publicacion p : usuario.getPublicaciones()) {
             // Llama a la funcion de imprimir una publicacion de la clase casosdeusopublicacion
             mostrarPublicacion(p);
         }

@@ -58,10 +58,7 @@ public class CasosDeUsoPublicacionTest {
                     "Hola a todos", 
                     false, false);
             
-            
-            
-            
-            
+        
             //assert
 
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("holaa");
@@ -111,15 +108,15 @@ public class CasosDeUsoPublicacionTest {
 
     @Test
     public void pruebaMostrarPublicacionConUnUsuarioQueNoExiste() {
-        // arrange
+        
+        /*try {
+                    // arrange
         repositorioPublicacion.deleteAll();
         repositorioUsuario.deleteAll();
 
         Usuario usuario = new Usuario("holaa", "HOLA", "jsdddd", "NOO", "si");
-
-        // act
-        /*try {
-            casosDeUsoPublicacion.mostrarPublicaciones(usuario);
+            // act
+            casosDeUsoPublicacion.mostrarPublicaciones("holaa");
             // Si no se lanza ninguna excepción, la prueba debe fallar
             fail("Se esperaba una UsuarioNoExisteException debido a la ausencia del usuario");
         } catch (UsuarioNoExisteException e) {
