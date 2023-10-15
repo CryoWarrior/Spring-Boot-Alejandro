@@ -54,12 +54,12 @@ public class CasosDeUsoCalificacionTest {
             publicacion = repositorioPublicacion.save(publicacion);
             
             //Act
-            casosDeUsoCalificacion.realizarCalificacionPublicacion(usuario, 3, publicacion);
+            casosDeUsoCalificacion.realizarCalificacionPublicacion("camilo", 3, publicacion.getId());
 
             //Assert
             //fail("OK: Se logro calificar la publicacion correctamente");
         } catch (Exception e) {
-            fail("No se califico la publicacion exitosamente");
+            fail("No se califico la publicacion exitosamente: ", e);
         }
     }
 
@@ -79,7 +79,7 @@ public class CasosDeUsoCalificacionTest {
             comentario = repositorioComentario.save(comentario);
 
             //Act
-            casosDeUsoCalificacion.realizarCalificacionComentario("camilo", 2, comentario);
+            casosDeUsoCalificacion.realizarCalificacionComentario("camilo", 2, comentario.getId());
 
             //Assert
             //fail("OK: Se logro calificar el comentario correctamente");
@@ -91,7 +91,6 @@ public class CasosDeUsoCalificacionTest {
     @Test
     public void pruebaSubirCalifacionFueraDeRango(){
         try {
-            System.out.println("SIGUIENTE");
             //Arrange 
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
             usuario = repositorioUsuario.save(usuario);
@@ -99,7 +98,7 @@ public class CasosDeUsoCalificacionTest {
             publicacion = repositorioPublicacion.save(publicacion);
 
             //Act
-            casosDeUsoCalificacion.realizarCalificacionPublicacion(usuario, 9, publicacion);
+            casosDeUsoCalificacion.realizarCalificacionPublicacion("camilo", 9, publicacion.getId());
 
             //Assert
             fail("Se califico la publicacion con un valor erroneo");

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ingesoft.cyclenet.dataAccess.RepositorioCalificacion;
+import com.ingesoft.cyclenet.dataAccess.RepositorioComentario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
 import com.ingesoft.cyclenet.domain.Calificacion;
@@ -15,16 +16,20 @@ import com.ingesoft.cyclenet.domain.Comentario;
 import com.ingesoft.cyclenet.domain.Publicacion;
 import com.ingesoft.cyclenet.domain.Usuario;
 
+import lombok.Synchronized;
+
 @Service
 public class CasosDeUsoCalificacion {
     @Autowired
     protected RepositorioCalificacion repositorioCalificacion;
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
-
+    @Autowired
+    protected RepositorioComentario repositorioComentario;
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
 
+    @Transactional
     public void realizarCalificacionPublicacion(String nombreUsuario, int valorCalificado, Long idPublicacion) throws Exception{
         if(valorCalificado < 1 || valorCalificado > 5){
             throw new Exception("La calificacion debe estar entre 1 y 5");
@@ -38,7 +43,7 @@ public class CasosDeUsoCalificacion {
 
         Optional<Publicacion> optionalPublicacion = repositorioPublicacion.findById(idPublicacion);
         if(optionalUsuario.isEmpty()){
-            throw new ExcepcionPublicacion("Esta publicaion no existe");
+            throw new ExcepcionPublicacion("Esta publicacion no existe");
         }
         Publicacion publicacion = optionalPublicacion.get();
 
@@ -54,7 +59,7 @@ public class CasosDeUsoCalificacion {
     }
 
     @Transactional
-    public void realizarCalificacionComentario(String nombreUsuario, int valorCalificado, Comentario comentario) throws Exception{
+    public void realizarCalificacionComentario(String nombreUsuario, int valorCalificado, Long idComentario) throws Exception{
         if(valorCalificado < 1 || valorCalificado > 5){
             throw new ExcepcionCalificacion("La calificacion debe estar entre 1 y 5");
         }
@@ -67,23 +72,27 @@ public class CasosDeUsoCalificacion {
 
         Usuario usuario = optionalUsuario.get();
 
-        System.out.println("LLEGA 0");
+
+        Optional<Comentario> optionalComentario = repositorioComentario.findById(idComentario);
+        if(optionalComentario.isEmpty()){
+            throw new ExcepcionComentario("Este Comentario no existe");
+        }
+        Comentario comentario = optionalComentario.get();
+
         //Crea la calificacion
         Calificacion calificacion = new Calificacion(valorCalificado, usuario ,comentario);
-        System.out.println("LLEGA 1");
 
         try {
             usuario.getCalificaciones().add(calificacion);
         } catch (Exception e) {
             throw new ExcepcionUsuarios("No se pudo agregar la calificacion al usuario: ", e);
         }
-        System.out.println("LLEGA 2");
+        
         try {
             comentario.getCalificaciones().add(calificacion);    
         } catch (Exception e) {
             throw new ExcepcionComentario("No se pudo agregar la calificacion al comentario: ", e);
         }
-        System.out.println("LLEGA 3");
 
         try {
             repositorioCalificacion.save(calificacion);

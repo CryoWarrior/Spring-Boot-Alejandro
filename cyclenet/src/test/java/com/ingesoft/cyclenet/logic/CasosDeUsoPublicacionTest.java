@@ -88,7 +88,6 @@ public class CasosDeUsoPublicacionTest {
     public void pruebaSubirPublicacionConUnUsuarioQueNoExiste(){
         try {
             //arrange
-            System.out.println("Segundo caso");
             repositorioPublicacion.deleteAll();
             repositorioUsuario.deleteAll();
             
@@ -99,7 +98,7 @@ public class CasosDeUsoPublicacionTest {
                     false, false);
 
             //assert
-            fail("Se logro subir la publicacion publicacion a pesar de la auscencia del usuario");
+            fail("Se logro subir la publicacion a pesar de la auscencia del usuario");
         
         } catch (Exception e) {
             //fail("OK: No se graba publicacion con usuario inexistente");

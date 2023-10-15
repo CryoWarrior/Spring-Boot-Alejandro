@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ingesoft.cyclenet.logic.CasosDeUsoComentario; // Asegúrate de importar la clase adecuada.
+import com.ingesoft.cyclenet.dataAccess.RepositorioCalificacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioComentario; // Asegúrate de importar la clase adecuada.
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
@@ -33,11 +34,14 @@ public class CasosDeUsoComentarioTest {
     protected RepositorioUsuario repositorioUsuario;
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
+    @Autowired
+    protected RepositorioCalificacion repositorioCalificacion;
 
     @BeforeEach
     public void prepararAmbienteDePruebas(){
-        repositorioPublicacion.deleteAll();
+        repositorioCalificacion.deleteAll();
         repositorioComentario.deleteAll();
+        repositorioPublicacion.deleteAll();
         repositorioUsuario.deleteAll();
     }
 
