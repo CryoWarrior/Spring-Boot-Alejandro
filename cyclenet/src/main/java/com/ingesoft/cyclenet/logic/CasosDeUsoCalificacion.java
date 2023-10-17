@@ -30,7 +30,7 @@ public class CasosDeUsoCalificacion {
     protected RepositorioPublicacion repositorioPublicacion;
 
     @Transactional
-    public void realizarCalificacionPublicacion(String nombreUsuario, int valorCalificado, Long idPublicacion) throws Exception{
+    public Long realizarCalificacionPublicacion(String nombreUsuario, int valorCalificado, Long idPublicacion) throws Exception{
         if(valorCalificado < 1 || valorCalificado > 5){
             throw new Exception("La calificacion debe estar entre 1 y 5");
         }
@@ -52,14 +52,15 @@ public class CasosDeUsoCalificacion {
         usuario.getCalificaciones().add(calificacion);
         publicacion.getCalificaciones().add(calificacion);
 
-        repositorioCalificacion.save(calificacion);
-        repositorioUsuario.save(usuario);
-        repositorioPublicacion.save(publicacion);
-        return;
+        calificacion = repositorioCalificacion.save(calificacion);
+        usuario = repositorioUsuario.save(usuario);
+        publicacion = repositorioPublicacion.save(publicacion);
+
+        return calificacion.getId();
     }
 
     @Transactional
-    public void realizarCalificacionComentario(String nombreUsuario, int valorCalificado, Long idComentario) throws Exception{
+    public Long realizarCalificacionComentario(String nombreUsuario, int valorCalificado, Long idComentario) throws Exception{
         if(valorCalificado < 1 || valorCalificado > 5){
             throw new ExcepcionCalificacion("La calificacion debe estar entre 1 y 5");
         }
@@ -87,7 +88,7 @@ public class CasosDeUsoCalificacion {
         } catch (Exception e) {
             throw new ExcepcionUsuarios("No se pudo agregar la calificacion al usuario: ", e);
         }
-        
+
         try {
             comentario.getCalificaciones().add(calificacion);    
         } catch (Exception e) {
@@ -95,10 +96,15 @@ public class CasosDeUsoCalificacion {
         }
 
         try {
-            repositorioCalificacion.save(calificacion);
+            calificacion = repositorioCalificacion.save(calificacion);
         } catch(Exception e) {
             throw new ExcepcionUsuarios("Error: No se pudo guardar la calificacion", e);
         }
-        return;
+
+        usuario = repositorioUsuario.save(usuario);
+        comentario = repositorioComentario.save(comentario);
+
+        //Retorna el Id de la calificacion
+        return calificacion.getId();
     }
 }
