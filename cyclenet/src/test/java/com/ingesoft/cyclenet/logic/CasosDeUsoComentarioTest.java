@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.LocalDate;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ingesoft.cyclenet.logic.CasosDeUsoComentario; // Asegúrate de importar la clase adecuada.
 import com.ingesoft.cyclenet.dataAccess.RepositorioCalificacion;
-import com.ingesoft.cyclenet.dataAccess.RepositorioComentario; // Asegúrate de importar la clase adecuada.
+import com.ingesoft.cyclenet.dataAccess.RepositorioComentario; 
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.domain.Comentario;
@@ -27,9 +27,9 @@ import com.ingesoft.cyclenet.domain.Publicacion;
 public class CasosDeUsoComentarioTest {
     
     @Autowired
-    protected CasosDeUsoComentario casosDeUsoComentario; // Asegúrate de inyectar la clase adecuada.
+    protected CasosDeUsoComentario casosDeUsoComentario; 
     @Autowired
-    protected RepositorioComentario repositorioComentario; // Asegúrate de inyectar la clase adecuada.
+    protected RepositorioComentario repositorioComentario; 
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
     @Autowired
@@ -53,27 +53,38 @@ public class CasosDeUsoComentarioTest {
             Usuario usuario = new Usuario("holaa", "HOLA", "jsdddd", "NOO", "si");
             usuario = repositorioUsuario.save(usuario);
             
-            Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
+            Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
             publicacion = repositorioPublicacion.save(publicacion);
 
             assertNotNull(usuario, "Usuario está en null");
             assertNotNull(publicacion, "La publicación aparece en null");
 
             // Act
-  /*          Long idNuevoComentario = casosDeUsoComentario.publicarComentario(
-                   "Este es un comentario", new Date(), usuario, publicacion);
+            Long idNuevoComentario = casosDeUsoComentario.subirComentario("holaa", publicacion.getId(),"Este es un comentario" );
             
             // Assert
+            Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("holaa");
+            assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
+
+            Usuario usuarioComentador = opcionalUsuario.get();
+            assertNotNull(usuarioComentador.getComentarios(), "El usuario no tiene comentarios");
+
+            Optional<Publicacion> opcionalPublicacion = repositorioPublicacion.findById(publicacion.getId());
+            assertFalse(opcionalPublicacion.isEmpty(), "La publicacion no aparece en la base de datos");
+
+            Publicacion publicacionComentada = opcionalPublicacion.get();
+            assertNotNull(publicacionComentada.getComentarios(), "La publicacion no tiene comentarios");
+
             Optional<Comentario> optionalComentario = repositorioComentario.findById(idNuevoComentario);
             assertFalse(optionalComentario.isEmpty(), "El comentario no aparece en la base de datos");
 
             Comentario nuevoComentario = optionalComentario.get();
             assertNotNull(nuevoComentario.getUsuario(), "El usuario no aparece en el comentario");
-            assertEquals(nuevoComentario.getUsuario().getNombreUsuario(), usuario.getNombreUsuario(), "El usuario no es el mismo");
+            assertEquals(nuevoComentario.getUsuario().getNombreUsuario(), usuarioComentador.getNombreUsuario(), "El usuario no es el mismo");
 
             assertNotNull(nuevoComentario.getPublicacion(), "La publicación no aparece en el comentario");
-            assertEquals(nuevoComentario.getPublicacion().getMensaje(), publicacion.getComentarios(), "La publicación no es la misma");
-*/
+            assertEquals(nuevoComentario.getPublicacion().getId(), publicacionComentada.getId(), "La publicación no es la misma");
+
             // OK: Se logró publicar un comentario exitosamente
         } catch (Exception e) {
             fail("No se logró publicar un comentario", e);
@@ -83,23 +94,40 @@ public class CasosDeUsoComentarioTest {
     @Test
     public void pruebaPublicarComentarioConUsuarioQueNoExiste(){
         try {
-            // Arrange
-            repositorioComentario.deleteAll();
-            repositorioUsuario.deleteAll();
-            repositorioPublicacion.deleteAll();
-
+            //Arrange
             Usuario usuario = new Usuario("holaa", "HOLA", "jsdddd", "NOO", "si");
+            usuario = repositorioUsuario.save(usuario);
             
-            Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
+            Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
             publicacion = repositorioPublicacion.save(publicacion);
 
             // Act
-            /*Long idNuevoComentario = casosDeUsoComentario.publicarComentario(
-                    "Este es un comentario", Date.valueOf(LocalDate.now()), usuario, publicacion);
-*/
+            casosDeUsoComentario.subirComentario("X", publicacion.getId(),"Este es un comentario" );
+            
             // Assert
+            fail("Se creo un comentario con un usuario que no existe");
         } catch (Exception e) {
             // OK: No se grabó el comentario con un usuario inexistente
+        }
+    }
+
+    @Test
+    public void pruebaPublicarComentarioConPublicacionQueNoExiste(){
+        try {
+            //Arrange
+            Usuario usuario = new Usuario("holaa", "HOLA", "jsdddd", "NOO", "si");
+            usuario = repositorioUsuario.save(usuario);
+            
+            Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
+            publicacion = repositorioPublicacion.save(publicacion);
+
+            // Act
+            casosDeUsoComentario.subirComentario("holaa", -5L,"Este es un comentario" );
+            
+            // Assert
+            fail("Se creo un comentario en una publicacion que no existe");
+        } catch (Exception e) {
+            // OK: No se grabó el comentario con una publicacion inexistente
         }
     }
 }

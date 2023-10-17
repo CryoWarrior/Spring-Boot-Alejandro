@@ -1,9 +1,7 @@
 package com.ingesoft.cyclenet.logic;
 
-import java.time.LocalDate;
 import java.util.Optional;
-import java.sql.Date;
-
+import java.sql.Timestamp;
 
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
@@ -38,7 +36,7 @@ public class CasosDeUsoPublicacion {
         Usuario usuario = optionalUsuario.get();
 
         //Guardar publicación
-        Date fecha = Date.valueOf(LocalDate.now());
+        Timestamp fecha = new Timestamp(System.currentTimeMillis());
 
         Publicacion publicacion = new Publicacion(mensaje, foto, lugar, fecha, usuario);
 
@@ -51,10 +49,9 @@ public class CasosDeUsoPublicacion {
         try {
             usuario.getPublicaciones().add(publicacion);        
         } catch (Exception e) {
-            throw new ExcepcionUsuarios("Error: No se pudo guardar el usuario",e);
+            throw new ExcepcionUsuarios("Error: No se pudo guardar la publicacion en el usuario",e);
         }
 
-        publicacion = repositorioPublicacion.save(publicacion);
         usuario = repositorioUsuario.save(usuario);
 
         //Retornar datos a mostrar

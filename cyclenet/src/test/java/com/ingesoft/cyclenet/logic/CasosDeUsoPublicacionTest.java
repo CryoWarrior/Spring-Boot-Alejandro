@@ -2,10 +2,7 @@ package com.ingesoft.cyclenet.logic;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -130,8 +127,8 @@ public class CasosDeUsoPublicacionTest {
 
         Usuario usuarioMostrado = opcionalUsuario.get();
         assertNotNull(usuarioMostrado.getPublicaciones(), "El usuario no tiene publicaciones");
-    } catch (ExcepcionUsuarios e) {
-            throw new ExcepcionPublicacion("No se pudieron mostrar las publicaciones del usuario: ",e);
+        } catch (ExcepcionUsuarios e) {
+            fail("No se pudieron mostrar las publicaciones del usuario: ",e);
         }
     }
 
@@ -142,8 +139,6 @@ public class CasosDeUsoPublicacionTest {
                     // arrange
         repositorioPublicacion.deleteAll();
         repositorioUsuario.deleteAll();
-
-        Usuario usuario = new Usuario("holaa", "HOLA", "jsdddd", "NOO", "si");
             // act
             casosDeUsoPublicacion.mostrarPublicaciones("holaa");
 

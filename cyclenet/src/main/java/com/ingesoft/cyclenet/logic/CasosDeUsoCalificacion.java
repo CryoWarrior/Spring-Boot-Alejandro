@@ -16,7 +16,6 @@ import com.ingesoft.cyclenet.domain.Comentario;
 import com.ingesoft.cyclenet.domain.Publicacion;
 import com.ingesoft.cyclenet.domain.Usuario;
 
-import lombok.Synchronized;
 
 @Service
 public class CasosDeUsoCalificacion {
