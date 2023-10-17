@@ -44,10 +44,22 @@ public class CasosDeUsoCalificacion {
         if(optionalUsuario.isEmpty()){
             throw new ExcepcionPublicacion("Esta publicacion no existe");
         }
+
         Publicacion publicacion = optionalPublicacion.get();
 
+        //Si el usuario ya califico la publicacion, elimina la calificacion anterior
+        for(Calificacion calificacion : publicacion.getCalificaciones()){
+            if(calificacion.getUsuario().getNombreUsuario().equals(usuario.getNombreUsuario())){
+                publicacion.getCalificaciones().remove(calificacion);
+                break;
+            }
+        }
+
+        //Crea la calificacion
         Calificacion calificacion = new Calificacion(valorCalificado, usuario ,publicacion);
         
+        //Guarda la calificacion
+
         usuario.getCalificaciones().add(calificacion);
         publicacion.getCalificaciones().add(calificacion);
 
@@ -79,9 +91,18 @@ public class CasosDeUsoCalificacion {
         }
         Comentario comentario = optionalComentario.get();
 
+        //Si el usuario ya califico el comentario, elimina la calificacion anterior
+        for(Calificacion calificacion : comentario.getCalificaciones()){
+            if(calificacion.getUsuario().getNombreUsuario().equals(usuario.getNombreUsuario())){
+                comentario.getCalificaciones().remove(calificacion);
+                break;
+            }
+        }
+
         //Crea la calificacion
         Calificacion calificacion = new Calificacion(valorCalificado, usuario ,comentario);
 
+        //Guarda la calificacion
         try {
             usuario.getCalificaciones().add(calificacion);
         } catch (Exception e) {

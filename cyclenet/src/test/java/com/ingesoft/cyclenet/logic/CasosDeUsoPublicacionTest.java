@@ -110,6 +110,7 @@ public class CasosDeUsoPublicacionTest {
     }
 
     @Test
+    @Transactional
     public void pruebaMostrarPublicacion() throws ExcepcionPublicacion {
         
         try {
@@ -131,7 +132,9 @@ public class CasosDeUsoPublicacionTest {
         assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
 
         Usuario usuarioMostrado = opcionalUsuario.get();
-        assertNotNull(usuarioMostrado.getPublicaciones(), "El usuario no tiene publicaciones");
+        assertNotNull(usuarioMostrado.getPublicaciones(), "El usuario tiene publicaciones en null");
+        assertFalse(usuarioMostrado.getPublicaciones().isEmpty(), "El usuario no tiene publicaciones");
+
         } catch (ExcepcionUsuarios e) {
             fail("No se pudieron mostrar las publicaciones del usuario: ",e);
         }
