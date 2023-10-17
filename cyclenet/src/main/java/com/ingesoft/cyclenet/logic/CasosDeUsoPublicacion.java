@@ -1,5 +1,6 @@
 package com.ingesoft.cyclenet.logic;
 
+import java.util.List;
 import java.util.Optional;
 import java.sql.Timestamp;
 
@@ -12,6 +13,7 @@ import com.ingesoft.cyclenet.domain.Usuario;
 
 import jakarta.transaction.Transactional;
 
+//import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +78,7 @@ public class CasosDeUsoPublicacion {
     }
 
     @Transactional
-    public void mostrarPublicaciones(String nombreUsuario)throws ExcepcionPublicacion, ExcepcionUsuarios{
+    public List<Publicacion> mostrarPublicaciones(String nombreUsuario)throws ExcepcionPublicacion, ExcepcionUsuarios{
         // Validar usuario
         Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
         if(optionalUsuario.isEmpty()){
@@ -85,15 +87,20 @@ public class CasosDeUsoPublicacion {
 
         Usuario usuario = optionalUsuario.get();
 
+        //Valida que el usuario tenga publicaciones
         if(usuario.getPublicaciones().isEmpty()){
             throw new ExcepcionPublicacion("Este usuario no ha hecho ninguna publicacion.");
         }
 
+        //Imprime informacion de las publicaciones
         System.out.println("Publicaciones de " + usuario.getNombre() + ":");
         
         for (Publicacion p : usuario.getPublicaciones()) {
             // Llama a la funcion de imprimir una publicacion de la clase casosdeusopublicacion
             mostrarPublicacion(p);
         }
+
+        //Devuelve una lista con las publicaciones del usuario
+        return usuario.getPublicaciones();
     }
 }

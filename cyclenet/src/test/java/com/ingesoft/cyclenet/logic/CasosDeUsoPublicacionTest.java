@@ -3,6 +3,7 @@ package com.ingesoft.cyclenet.logic;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -111,7 +112,7 @@ public class CasosDeUsoPublicacionTest {
 
     @Test
     @Transactional
-    public void pruebaMostrarPublicacion() throws ExcepcionPublicacion {
+    public void pruebaMostrarPublicaciones() throws ExcepcionPublicacion {
         
         try {
         // arrange
@@ -125,7 +126,7 @@ public class CasosDeUsoPublicacionTest {
         casosDeUsoPublicacion.subirPublicacion("camilo","CHaooo", false, false);
 
         // act
-        casosDeUsoPublicacion.mostrarPublicaciones("camilo");
+        List<Publicacion> publicacionesAMostrar = casosDeUsoPublicacion.mostrarPublicaciones("camilo");
 
         //Assert
         Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("camilo");

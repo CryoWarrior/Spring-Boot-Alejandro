@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -139,5 +140,60 @@ public class CasosDeUsoComentarioTest {
         } catch (Exception e) {
             // OK: No se grabó el comentario con una publicacion inexistente
         }
+    }
+
+    @Test
+    @Transactional
+    public void pruebaMostrarComentarios() throws ExcepcionPublicacion, ExcepcionComentario {
+        
+        try {
+        // arrange
+        repositorioComentario.deleteAll();
+        repositorioPublicacion.deleteAll();
+        repositorioUsuario.deleteAll();
+
+        Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
+        usuario = repositorioUsuario.save(usuario);
+
+        Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
+        publicacion = repositorioPublicacion.save(publicacion);
+        
+
+        casosDeUsoComentario.subirComentario("camilo",publicacion.getId(),"Hola aaasasas");
+        casosDeUsoComentario.subirComentario("camilo",publicacion.getId(),"cahoo");
+
+        // act
+        List<Comentario> comentariosAMostrar = casosDeUsoComentario.mostrarComentarios("camilo");
+
+        //Assert
+        Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("camilo");
+        assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
+
+        Usuario usuarioMostrado = opcionalUsuario.get();
+        assertNotNull(usuarioMostrado.getComentarios(), "El usuario tiene comentarios en null");
+        assertFalse(usuarioMostrado.getComentarios().isEmpty(), "El usuario no tiene comentarios");
+        } catch (ExcepcionUsuarios e) {
+            fail("No se pudieron mostrar los comentarios del usuario: ",e);
+        }
+    }
+
+    @Test
+    public void pruebaMostrarComentariosConUnUsuarioQueNoExiste() throws ExcepcionPublicacion, ExcepcionComentario {
+        
+        try {
+            // arrange
+            repositorioComentario.deleteAll();
+            repositorioPublicacion.deleteAll();
+            repositorioUsuario.deleteAll();
+    
+            // act
+            casosDeUsoComentario.mostrarComentarios("camilo");
+            
+            // Si no se lanza ninguna excepción, la prueba debe fallar
+            fail("Se esperaba una UsuarioNoExisteException debido a la ausencia del usuario");
+        } catch (ExcepcionUsuarios e) {
+            // La excepción esperada fue lanzada, la prueba es exitosa
+        }
+
     }
 }

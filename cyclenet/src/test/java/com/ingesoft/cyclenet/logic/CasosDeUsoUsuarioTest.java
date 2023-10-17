@@ -211,10 +211,5 @@ public class CasosDeUsoUsuarioTest {
         System.out.println("Luego de cada prueba");
         System.out.println();
     }
-/* 
-    @AfterAll
-    public void despuesDeTodasLasPruebas(){
-        System.out.println("Despues de todas las pruebas");
-        System.out.println();
-    }*/
+
 }

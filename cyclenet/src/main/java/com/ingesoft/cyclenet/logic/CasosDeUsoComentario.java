@@ -2,6 +2,7 @@ package com.ingesoft.cyclenet.logic;
 
 import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ingesoft.cyclenet.dataAccess.RepositorioComentario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
+import com.ingesoft.cyclenet.domain.Calificacion;
 import com.ingesoft.cyclenet.domain.Comentario;
 import com.ingesoft.cyclenet.domain.Publicacion;
 import com.ingesoft.cyclenet.domain.Usuario;
@@ -73,6 +75,44 @@ public class CasosDeUsoComentario {
 
         //Retornar datos a mostrar
         return comentario.getId();
+    }
+
+    
+    public void mostrarComentario(Comentario uncome) {
+
+        System.out.println("Mensaje: "+ uncome.getMensaje());
+        System.out.println("Fecha: "+ uncome.getFecha());
+        System.out.println("Usuario: "+uncome.getUsuario().getNombreUsuario());
+        System.out.println(" Calificaciones: ");
+        for (Calificacion c : uncome.getCalificaciones()) {
+            System.out.println("  Numero: " + c.getNumCalificacion());
+        }
+    }
+    
+
+    @Transactional
+    public List <Comentario> mostrarComentarios(String nombreUsuario)throws ExcepcionComentario, ExcepcionUsuarios{
+        // Validar usuario
+        Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
+        if(optionalUsuario.isEmpty()){
+            throw new ExcepcionUsuarios("Este usuario no existe");
+        }
+
+        Usuario usuario = optionalUsuario.get();
+        //Validar que el usuario tenga comentarios
+        if(usuario.getComentarios().isEmpty()){
+            throw new ExcepcionComentario("Este usuario no ha hecho ningun comentario.");
+        }
+
+
+        //Imprimir la informacion de los comentarios
+        System.out.println("Comentarios de " + usuario.getNombre() + ":");
+        
+        for (Comentario uncome : usuario.getComentarios()) {
+            mostrarComentario(uncome);
+        }
+        //Devuelve una lista con los comentarios del usuario
+        return usuario.getComentarios();
     }
 
 }
