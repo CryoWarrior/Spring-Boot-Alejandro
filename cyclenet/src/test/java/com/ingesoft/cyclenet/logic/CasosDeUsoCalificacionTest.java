@@ -1,7 +1,6 @@
 package com.ingesoft.cyclenet.logic;
 
-import java.sql.Date;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -22,6 +21,8 @@ import com.ingesoft.cyclenet.domain.Calificacion;
 import com.ingesoft.cyclenet.domain.Comentario;
 import com.ingesoft.cyclenet.domain.Publicacion;
 import com.ingesoft.cyclenet.domain.Usuario;
+
+import jakarta.transaction.Transactional;
 
 
 @SpringBootTest
@@ -47,6 +48,7 @@ public class CasosDeUsoCalificacionTest {
         repositorioUsuario.deleteAll();
     }
 
+    @Transactional
     @Test
     public void pruebaSubirCalificacionPublicacionExitosamente(){
         try {
@@ -55,25 +57,30 @@ public class CasosDeUsoCalificacionTest {
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
             usuario = repositorioUsuario.save(usuario);
 
-            Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
+            Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
             publicacion = repositorioPublicacion.save(publicacion);
             
             //Act
             Long idCalificacionPublicacion = casosDeUsoCalificacion.realizarCalificacionPublicacion("camilo", 3, publicacion.getId());
 
             //Assert
+            //Revisa usuario
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("camilo");
             assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
 
             Usuario usuarioModificado = opcionalUsuario.get();
-            assertNotNull(usuarioModificado.getCalificaciones(), "El usuario no tiene calificaciones");
-
+            assertNotNull(usuarioModificado.getCalificaciones(), "El usuario tiene calificaciones en null");
+            assertFalse(usuarioModificado.getCalificaciones().isEmpty(), "El usuario no tiene calificaciones");
+            
+            //Revisa la publicacion
             Optional<Publicacion> opcionalPublicacion = repositorioPublicacion.findById(publicacion.getId());
             assertFalse(opcionalPublicacion.isEmpty(), "La publicacion no aparece en la base de datos");
 
             Publicacion publicacionModificada = opcionalPublicacion.get();
-            assertNotNull(publicacionModificada.getCalificaciones(), "La publicacion no tiene calificaciones");
+            assertNotNull(publicacionModificada.getCalificaciones(), "La publicacion tiene calificaciones en null");
+            assertFalse(publicacionModificada.getCalificaciones().isEmpty(), "La publicacion no tiene calificaciones");
 
+            //Revisa la calificacion
             Optional<Calificacion> opcionalCalificacion = repositorioCalificacion.findById(idCalificacionPublicacion);
             assertFalse(opcionalCalificacion.isEmpty(), "La calificacion no aparece en la base de datos");
 
@@ -86,26 +93,31 @@ public class CasosDeUsoCalificacionTest {
 
             assertNotNull(calificacionRealizada.getPublicacion(),"La calificacion no esta asociado a una publicacion");
             assertEquals(calificacionRealizada.getPublicacion().getId(), publicacionModificada.getId(), "Publicacion calificada incorrecta");
+            
+            assertEquals(calificacionRealizada.getNumCalificacion(), 3, "Numero de calificacion incorrecta");
 
         } catch (Exception e) {
             fail("No se califico la publicacion exitosamente: ", e);
         }
     }
 
+    @Transactional
     @Test
     public void pruebaSubirCalificacionComentarioExitosamente(){
         try {
             //Arrange 
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
             usuario = repositorioUsuario.save(usuario);
-            Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
+            Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
             publicacion = repositorioPublicacion.save(publicacion);
             Comentario comentario = new Comentario(
                 "No, asi no es",
-                Date.valueOf(LocalDate.now()),
+                new Timestamp(System.currentTimeMillis()),
                 usuario,
                 publicacion);
             comentario = repositorioComentario.save(comentario);
+            publicacion.getComentarios().add(comentario);
+            repositorioPublicacion.save(publicacion);
 
             //Act
             Long idCalificacionComentario = casosDeUsoCalificacion.realizarCalificacionComentario(
@@ -114,27 +126,36 @@ public class CasosDeUsoCalificacionTest {
             comentario.getId());
 
             //Assert
+            //Revisa usuario
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("camilo");
             assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
 
             Usuario usuarioModificado = opcionalUsuario.get();
-            assertNotNull(usuarioModificado.getCalificaciones(), "El usuario no tiene calificaciones");
-
+            assertNotNull(usuarioModificado.getCalificaciones(), "El usuario tiene calificaciones en null");
+            assertFalse(usuarioModificado.getCalificaciones().isEmpty(), "El usuario no tiene calificaciones");
+            
+            //Revisa publicacion
             Optional<Publicacion> opcionalPublicacion = repositorioPublicacion.findById(publicacion.getId());
             assertFalse(opcionalPublicacion.isEmpty(), "La publicacion no aparece en la base de datos");
 
             Publicacion publicacionModificada = opcionalPublicacion.get();
-            assertNotNull(publicacionModificada.getComentarios(), "La publicacion no tiene comentarios");
+            assertNotNull(publicacionModificada.getComentarios(), "La publicacion tiene comentarios en null");
+            assertFalse(publicacionModificada.getComentarios().isEmpty(), "La publicacion no tiene comentarios");
 
-
+            //Revisa comentario
             Optional<Comentario> opcionalComentario = repositorioComentario.findById(comentario.getId());
             assertFalse(opcionalComentario.isEmpty(), "El comentario no aparece en la base de datos");
 
             Comentario comentarioCalificado = opcionalComentario.get();
             assertNotNull(comentarioCalificado.getPublicacion(),"El comentario no esta asociado a una publicacion");
-            assertNotNull(comentarioCalificado.getCalificaciones(), "El comentario no tiene calificaciones");
+            assertEquals(
+                comentarioCalificado.getPublicacion().getId(), 
+                publicacionModificada.getId(), 
+                "La publicacion es incorrecta");
+            assertNotNull(comentarioCalificado.getCalificaciones(), "El comentario tiene calificaciones en null");
+            assertFalse(comentarioCalificado.getCalificaciones().isEmpty(), "El comentario no tiene calificaciones");
 
-    
+            //Revisa calificacion
             Optional<Calificacion> opcionalCalificacion = repositorioCalificacion.findById(idCalificacionComentario);
             assertFalse(opcionalCalificacion.isEmpty(), "La calificacion no aparece en la base de datos");
 
@@ -148,6 +169,7 @@ public class CasosDeUsoCalificacionTest {
             assertNotNull(calificacionRealizada.getComentario(),"La calificacion no esta asociado a un comentario");
             assertEquals(calificacionRealizada.getComentario().getId(), comentarioCalificado.getId(), "Comentario calificado incorrecto");
 
+            assertEquals(calificacionRealizada.getNumCalificacion(), 2, "Numero de calificacion incorrecta");
 
         } catch (Exception e) {
             fail("No se califico el comentario exitosamente: ", e);
@@ -160,7 +182,7 @@ public class CasosDeUsoCalificacionTest {
             //Arrange 
             Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
             usuario = repositorioUsuario.save(usuario);
-            Publicacion publicacion = new Publicacion("Asi es",false,false,Date.valueOf(LocalDate.now()),usuario);
+            Publicacion publicacion = new Publicacion("Asi es",false,false,new Timestamp(System.currentTimeMillis()),usuario);
             publicacion = repositorioPublicacion.save(publicacion);
 
             //Act

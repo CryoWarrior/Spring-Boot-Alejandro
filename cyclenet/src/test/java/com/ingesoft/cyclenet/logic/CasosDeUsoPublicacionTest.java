@@ -59,13 +59,15 @@ public class CasosDeUsoPublicacionTest {
             
         
             //assert
-
+            //Revisa usuario
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("holaa");
             assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
 
             Usuario usuarioModificado = opcionalUsuario.get();
-            assertNotNull(usuarioModificado.getPublicaciones(), "El usuario no tiene publicaciones");
-
+            assertNotNull(usuarioModificado.getPublicaciones(), "El usuario tiene calificaciones en null");
+            assertFalse(usuarioModificado.getPublicaciones().isEmpty(), "El usuario no tiene publicaciones");
+            
+            //Revisa Publiacion
             Optional<Publicacion> opcionalPublicacion = repositorioPublicacion.findById(idNuevaPublicacion);
             assertFalse(opcionalPublicacion.isEmpty(), "La publicacion no aparece en la base de datos");
 
@@ -75,6 +77,9 @@ public class CasosDeUsoPublicacionTest {
                 nuevaPublicacion.getUsuario().getNombreUsuario(), 
                 usuarioModificado.getNombreUsuario(), 
                 "El usuario no es el mismo");
+
+
+            assertEquals(nuevaPublicacion.getMensaje(), "Hola a todos", "El mensaje de la publicación no coincide con el escrito");
 
             // OK: Se logro subir una publicacion exitosamente
         

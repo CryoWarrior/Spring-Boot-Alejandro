@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.time.LocalDate;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Optional;
 
@@ -21,6 +19,9 @@ import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.domain.Comentario;
 import com.ingesoft.cyclenet.domain.Usuario;
+
+import jakarta.transaction.Transactional;
+
 import com.ingesoft.cyclenet.domain.Publicacion;
 
 @SpringBootTest
@@ -45,6 +46,7 @@ public class CasosDeUsoComentarioTest {
         repositorioUsuario.deleteAll();
     }
 
+    @Transactional
     @Test
     public void pruebaPublicarComentarioExitosamente(){
         try {
@@ -63,18 +65,24 @@ public class CasosDeUsoComentarioTest {
             Long idNuevoComentario = casosDeUsoComentario.subirComentario("holaa", publicacion.getId(),"Este es un comentario" );
             
             // Assert
+
+            //Revisa el usuario
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("holaa");
             assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
 
             Usuario usuarioComentador = opcionalUsuario.get();
-            assertNotNull(usuarioComentador.getComentarios(), "El usuario no tiene comentarios");
+            assertNotNull(usuarioComentador.getComentarios(), "El usuario tiene comentarios en null");
+            assertFalse(usuarioComentador.getComentarios().isEmpty(), "La publicacion no tiene comentarios");
 
+            //Revisa la publicacion
             Optional<Publicacion> opcionalPublicacion = repositorioPublicacion.findById(publicacion.getId());
             assertFalse(opcionalPublicacion.isEmpty(), "La publicacion no aparece en la base de datos");
 
             Publicacion publicacionComentada = opcionalPublicacion.get();
-            assertNotNull(publicacionComentada.getComentarios(), "La publicacion no tiene comentarios");
+            assertNotNull(publicacionComentada.getComentarios(), "La publicacion tiene comentarios en null");
+            assertFalse(publicacionComentada.getComentarios().isEmpty(), "La publicacion no tiene comentarios");
 
+            //Revisa comentario
             Optional<Comentario> optionalComentario = repositorioComentario.findById(idNuevoComentario);
             assertFalse(optionalComentario.isEmpty(), "El comentario no aparece en la base de datos");
 
@@ -84,6 +92,8 @@ public class CasosDeUsoComentarioTest {
 
             assertNotNull(nuevoComentario.getPublicacion(), "La publicación no aparece en el comentario");
             assertEquals(nuevoComentario.getPublicacion().getId(), publicacionComentada.getId(), "La publicación no es la misma");
+
+            assertEquals(nuevoComentario.getMensaje(), "Este es un comentario", "El mensaje del comentario no coincide con el escrito");
 
             // OK: Se logró publicar un comentario exitosamente
         } catch (Exception e) {

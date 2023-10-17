@@ -63,9 +63,9 @@ public class CasosDeUsoComentario {
         }
         
         try {
-            usuario.getPublicaciones().add(publicacion);        
+            usuario.getComentarios().add(comentario);        
         } catch (Exception e) {
-            throw new ExcepcionUsuarios("Error: No se pudo guardar la publicacion en el usuario",e);
+            throw new ExcepcionUsuarios("Error: No se pudo guardar el comentario en el usuario",e);
         }
 
         publicacion = repositorioPublicacion.save(publicacion);
