@@ -12,6 +12,8 @@ import com.ingesoft.cyclenet.domain.Comentario;
 import com.ingesoft.cyclenet.domain.Publicacion;
 import com.ingesoft.cyclenet.domain.Usuario;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ public class CasosDeUsoPublicacion {
     @Autowired
     protected RepositorioUsuario repositorioUsuario;
 
+    @Transactional
     public Long subirPublicacion(String nombreUsuario, String mensaje, Boolean foto, Boolean lugar) throws ExcepcionUsuarios{
 
         // Validar usuario
@@ -57,11 +60,6 @@ public class CasosDeUsoPublicacion {
         //Retornar datos a mostrar
          return publicacion.getId();
     }
-
-    public void mostrarPublicacionLugar(Publicacion publicacion){
-        //Retornar datos a mostrar
-        return;
-    }
     
     public void mostrarPublicacion(Publicacion p) {
         System.out.println("Mensaje: " + p.getMensaje());
@@ -80,6 +78,7 @@ public class CasosDeUsoPublicacion {
         }
     }
 
+    @Transactional
     public void mostrarPublicaciones(String nombreUsuario)throws ExcepcionPublicacion, ExcepcionUsuarios{
         // Validar usuario
         Optional<Usuario> optionalUsuario = repositorioUsuario.findById(nombreUsuario);
@@ -93,7 +92,7 @@ public class CasosDeUsoPublicacion {
             throw new ExcepcionPublicacion("Este usuario no ha hecho ninguna publicacion.");
         }
 
-        System.out.println("Publicaiones de " + usuario.getNombre() + ":");
+        System.out.println("Publicaciones de " + usuario.getNombre() + ":");
         
         for (Publicacion p : usuario.getPublicaciones()) {
             // Llama a la funcion de imprimir una publicacion de la clase casosdeusopublicacion

@@ -51,27 +51,59 @@ public class CasosDeUsoUsuarioTest {
     //Casos de uso
     //Test login
     @Test
-    public void pruebaLoginFallida(){
+    public void pruebaLoginFallidaPorUsuario(){
         try {
-            casosDeUsoUsuarios.iniciarSesion("X", "Y");
-            fail("Inicio sesion");
+            //Arrange
+            repositorioUsuario.deleteAll();
+            Usuario usuario = new Usuario("camilo","HOLA","arma159","NOO","si");
+            repositorioUsuario.save(usuario);
+
+            //Act
+            casosDeUsoUsuarios.iniciarSesion("X", "arma159");
+
+            //Assert
+            fail("Inicio sesion con usuario incorrecto");
         } catch (Exception e) {
             // OK -- No inicio sesion
         }
     }
 
+    @Test
+    public void pruebaLoginFallidaPorContrasena(){
+        try {
+            //Arrange
+            repositorioUsuario.deleteAll();
+            Usuario usuario = new Usuario("camilo","HOLA","arma159","NOO","si");
+            repositorioUsuario.save(usuario);
+
+            //Act
+            casosDeUsoUsuarios.iniciarSesion("camilo", "Y");
+
+            //Assert
+            fail("Inicio sesion con contrasena incorrecta");
+        } catch (Exception e) {
+            // OK -- No inicio sesion
+        }
+    }
+
+    @Test
     public void pruebaLoginAcertada(){
         try {
             //arange
             repositorioUsuario.deleteAll();
-            Usuario usuario = new Usuario("holaa","HOLA","arma159","NOO","si");
+            Usuario usuario = new Usuario("holaa","HOLA","armaa159","NOO","si");
             repositorioUsuario.save(usuario);
 
             //act
             casosDeUsoUsuarios.iniciarSesion("holaa", "armaa159");
 
             //assert
-            //fail("OK: Se logro iniciar sesion");
+            Optional<Usuario> usuariosConNombreJaime = repositorioUsuario.findById("holaa");
+            if(usuariosConNombreJaime.isEmpty()){
+                fail("Usuario al que se inicio sesion no existe");
+            }
+            Usuario u = usuariosConNombreJaime.get();
+            assertEquals(u.getContraseña(), "armaa159", "Se entro con una contrasena incorrecta");
 
         } catch (Exception e) {
             fail("No se logro iniciar sesion :(");
@@ -117,7 +149,7 @@ public class CasosDeUsoUsuarioTest {
             repositorioUsuario.save(u);
 
             //Act
-            casosDeUsoUsuarios.registrarUsuario("Jaime", "Jaime", "Jaime", "Jaime", "Jaime");
+            casosDeUsoUsuarios.registrarUsuario("jaime", "Jaime", "Jaime", "Jaime@voa.net", "31000");
 
             //Assert
             fail("Dejo grabar otro usuario con un login que ya existia");

@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -101,14 +103,42 @@ public class CasosDeUsoPublicacionTest {
             fail("Se logro subir la publicacion a pesar de la auscencia del usuario");
         
         } catch (Exception e) {
-            //fail("OK: No se graba publicacion con usuario inexistente");
+            //"OK: No se graba publicacion con usuario inexistente"
         }
     }
 
     @Test
-    public void pruebaMostrarPublicacionConUnUsuarioQueNoExiste() {
+    public void pruebaMostrarPublicacion() throws ExcepcionPublicacion {
         
-        /*try {
+        try {
+        // arrange
+        repositorioPublicacion.deleteAll();
+        repositorioUsuario.deleteAll();
+
+        Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
+        usuario = repositorioUsuario.save(usuario);
+
+        casosDeUsoPublicacion.subirPublicacion("camilo","Hola a todos", false, false);
+        casosDeUsoPublicacion.subirPublicacion("camilo","CHaooo", false, false);
+
+        // act
+        casosDeUsoPublicacion.mostrarPublicaciones("camilo");
+
+        //Assert
+        Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("camilo");
+        assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
+
+        Usuario usuarioMostrado = opcionalUsuario.get();
+        assertNotNull(usuarioMostrado.getPublicaciones(), "El usuario no tiene publicaciones");
+    } catch (ExcepcionUsuarios e) {
+            throw new ExcepcionPublicacion("No se pudieron mostrar las publicaciones del usuario: ",e);
+        }
+    }
+
+    @Test
+    public void pruebaMostrarPublicacionConUnUsuarioQueNoExiste() throws ExcepcionPublicacion {
+        
+        try {
                     // arrange
         repositorioPublicacion.deleteAll();
         repositorioUsuario.deleteAll();
@@ -116,13 +146,16 @@ public class CasosDeUsoPublicacionTest {
         Usuario usuario = new Usuario("holaa", "HOLA", "jsdddd", "NOO", "si");
             // act
             casosDeUsoPublicacion.mostrarPublicaciones("holaa");
+
             // Si no se lanza ninguna excepción, la prueba debe fallar
             fail("Se esperaba una UsuarioNoExisteException debido a la ausencia del usuario");
-        } catch (UsuarioNoExisteException e) {
+        } catch (ExcepcionUsuarios e) {
             // La excepción esperada fue lanzada, la prueba es exitosa
-        }*/
+        }
 
     }
+
+    
 }
 
 
