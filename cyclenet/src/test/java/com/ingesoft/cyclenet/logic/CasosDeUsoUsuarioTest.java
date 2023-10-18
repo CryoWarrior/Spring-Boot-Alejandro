@@ -1,7 +1,5 @@
 package com.ingesoft.cyclenet.logic;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -16,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ingesoft.cyclenet.dataAccess.RepositorioCalificacion;
+import com.ingesoft.cyclenet.dataAccess.RepositorioComentario;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
 import com.ingesoft.cyclenet.dataAccess.RepositorioUsuario;
 import com.ingesoft.cyclenet.domain.Usuario;
@@ -31,38 +31,77 @@ public class CasosDeUsoUsuarioTest {
     protected RepositorioUsuario repositorioUsuario;
     @Autowired
     protected RepositorioPublicacion repositorioPublicacion;
-    
+    @Autowired
+    protected RepositorioCalificacion repositorioCalificacion;
+    @Autowired
+    protected RepositorioComentario repositorioComentario;
+
     @BeforeEach
     public void prepararAmbienteDePruebas(){
         System.out.println("Antes de cada prueba");
         System.out.println();
+        repositorioCalificacion.deleteAll();
+        repositorioComentario.deleteAll();
         repositorioPublicacion.deleteAll();
+
     }
 
     //Casos de uso
     //Test login
     @Test
-    public void pruebaLoginFallida(){
+    public void pruebaLoginFallidaPorUsuario(){
         try {
-            casosDeUsoUsuarios.iniciarSesion("X", "Y");
-            fail("Inicio sesion");
+            //Arrange
+            repositorioUsuario.deleteAll();
+            Usuario usuario = new Usuario("camilo","HOLA","arma159","NOO","si");
+            repositorioUsuario.save(usuario);
+
+            //Act
+            casosDeUsoUsuarios.iniciarSesion("X", "arma159");
+
+            //Assert
+            fail("Inicio sesion con usuario incorrecto");
         } catch (Exception e) {
             // OK -- No inicio sesion
         }
     }
 
+    @Test
+    public void pruebaLoginFallidaPorContrasena(){
+        try {
+            //Arrange
+            repositorioUsuario.deleteAll();
+            Usuario usuario = new Usuario("camilo","HOLA","arma159","NOO","si");
+            repositorioUsuario.save(usuario);
+
+            //Act
+            casosDeUsoUsuarios.iniciarSesion("camilo", "Y");
+
+            //Assert
+            fail("Inicio sesion con contrasena incorrecta");
+        } catch (Exception e) {
+            // OK -- No inicio sesion
+        }
+    }
+
+    @Test
     public void pruebaLoginAcertada(){
         try {
             //arange
             repositorioUsuario.deleteAll();
-            Usuario usuario = new Usuario("holaa","HOLA","arma159","NOO","si");
+            Usuario usuario = new Usuario("holaa","HOLA","armaa159","NOO","si");
             repositorioUsuario.save(usuario);
 
             //act
             casosDeUsoUsuarios.iniciarSesion("holaa", "armaa159");
 
             //assert
-            //fail("OK: Se logro iniciar sesion");
+            Optional<Usuario> usuariosConNombreJaime = repositorioUsuario.findById("holaa");
+            if(usuariosConNombreJaime.isEmpty()){
+                fail("Usuario al que se inicio sesion no existe");
+            }
+            Usuario u = usuariosConNombreJaime.get();
+            assertEquals(u.getContraseña(), "armaa159", "Se entro con una contrasena incorrecta");
 
         } catch (Exception e) {
             fail("No se logro iniciar sesion :(");
@@ -108,7 +147,7 @@ public class CasosDeUsoUsuarioTest {
             repositorioUsuario.save(u);
 
             //Act
-            casosDeUsoUsuarios.registrarUsuario("Jaime", "Jaime", "Jaime", "Jaime", "Jaime");
+            casosDeUsoUsuarios.registrarUsuario("jaime", "Jaime", "Jaime", "Jaime@voa.net", "31000");
 
             //Assert
             fail("Dejo grabar otro usuario con un login que ya existia");
@@ -133,6 +172,38 @@ public class CasosDeUsoUsuarioTest {
         }
     }
 
+    @Test
+    public void registrarUsuarioConCorreoSinArroba(){
+        try {
+            //Arrange
+            repositorioUsuario.deleteAll();
+        
+            //Act
+            casosDeUsoUsuarios.registrarUsuario("Jaime","Jaime Lombo","l232123","juan.net","31565431");
+        
+            //Assert
+            fail("Dejo grabar usuario con una correo sin arroba");
+        } catch (ExcepcionUsuarios e) {
+            // OK - No dejo grabar usuario con correo sin arroba
+        }
+    }
+
+    @Test
+    public void registrarUsuarioConCorreoSinPunto(){
+        try {
+            //Arrange
+            repositorioUsuario.deleteAll();
+        
+            //Act
+            casosDeUsoUsuarios.registrarUsuario("Jaime","Jaime Lombo","l232123","juan@homral","31565431");
+        
+            //Assert
+            fail("Dejo grabar usuario con una correo sin punto");
+        } catch (ExcepcionUsuarios e) {
+            // OK - No dejo grabar usuario con  con correo sin punto
+        }
+    }
+
     //Clean up
 
     @AfterEach
@@ -140,10 +211,5 @@ public class CasosDeUsoUsuarioTest {
         System.out.println("Luego de cada prueba");
         System.out.println();
     }
-/* 
-    @AfterAll
-    public void despuesDeTodasLasPruebas(){
-        System.out.println("Despues de todas las pruebas");
-        System.out.println();
-    }*/
+
 }

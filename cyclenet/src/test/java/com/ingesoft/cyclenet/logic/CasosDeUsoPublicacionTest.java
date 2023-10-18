@@ -3,6 +3,7 @@ package com.ingesoft.cyclenet.logic;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ingesoft.cyclenet.logic.CasosDeUsoPublicacionTest;
 import com.ingesoft.cyclenet.dataAccess.RepositorioPublicacion;
@@ -33,6 +35,7 @@ public class CasosDeUsoPublicacionTest {
     protected RepositorioUsuario repositorioUsuario;
 
     @Test
+    @Transactional
     public void pruebaSubirPublicacionExitosamente(){
         try {
 
@@ -51,17 +54,21 @@ public class CasosDeUsoPublicacionTest {
 
             //act
             Long idNuevaPublicacion = casosDeUsoPublicacion.subirPublicacion(
-                    usuario,
+                    "holaa",
                     "Hola a todos", 
                     false, false);
+            
+        
             //assert
-
+            //Revisa usuario
             Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("holaa");
             assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
 
             Usuario usuarioModificado = opcionalUsuario.get();
-            assertNotNull(usuarioModificado.getPublicaciones(), "El usuario no tiene publicaciones");
-
+            assertNotNull(usuarioModificado.getPublicaciones(), "El usuario tiene calificaciones en null");
+            assertFalse(usuarioModificado.getPublicaciones().isEmpty(), "El usuario no tiene publicaciones");
+            
+            //Revisa Publiacion
             Optional<Publicacion> opcionalPublicacion = repositorioPublicacion.findById(idNuevaPublicacion);
             assertFalse(opcionalPublicacion.isEmpty(), "La publicacion no aparece en la base de datos");
 
@@ -71,6 +78,9 @@ public class CasosDeUsoPublicacionTest {
                 nuevaPublicacion.getUsuario().getNombreUsuario(), 
                 usuarioModificado.getNombreUsuario(), 
                 "El usuario no es el mismo");
+
+
+            assertEquals(nuevaPublicacion.getMensaje(), "Hola a todos", "El mensaje de la publicación no coincide con el escrito");
 
             // OK: Se logro subir una publicacion exitosamente
         
@@ -83,24 +93,73 @@ public class CasosDeUsoPublicacionTest {
     public void pruebaSubirPublicacionConUnUsuarioQueNoExiste(){
         try {
             //arrange
-            System.out.println("Segundo caso");
             repositorioPublicacion.deleteAll();
             repositorioUsuario.deleteAll();
-
-            Usuario usuario = new Usuario("holaa","HOLA","jsdddd","NOO","si");
             
             //act
             Long idNuevaPublicacion = casosDeUsoPublicacion.subirPublicacion(
-                    usuario,
+                    "ss",
                     "Hola a todos", 
                     false, false);
 
             //assert
-            fail("Se logro subir la publicacion publicacion a pesar de la auscencia del usuario");
+            fail("Se logro subir la publicacion a pesar de la auscencia del usuario");
         
         } catch (Exception e) {
-            //fail("OK: No se graba publicacion con usuario inexistente");
+            //"OK: No se graba publicacion con usuario inexistente"
         }
     }
+
+    @Test
+    @Transactional
+    public void pruebaMostrarPublicaciones() throws ExcepcionPublicacion {
+        
+        try {
+        // arrange
+        repositorioPublicacion.deleteAll();
+        repositorioUsuario.deleteAll();
+
+        Usuario usuario = new Usuario("camilo","juan","lina123","NOO","si");
+        usuario = repositorioUsuario.save(usuario);
+
+        casosDeUsoPublicacion.subirPublicacion("camilo","Hola a todos", false, false);
+        casosDeUsoPublicacion.subirPublicacion("camilo","CHaooo", false, false);
+
+        // act
+        List<Publicacion> publicacionesAMostrar = casosDeUsoPublicacion.mostrarPublicaciones("camilo");
+
+        //Assert
+        Optional<Usuario> opcionalUsuario = repositorioUsuario.findById("camilo");
+        assertFalse(opcionalUsuario.isEmpty(), "El usuario no aparece en la base de datos");
+
+        Usuario usuarioMostrado = opcionalUsuario.get();
+        assertNotNull(usuarioMostrado.getPublicaciones(), "El usuario tiene publicaciones en null");
+        assertFalse(usuarioMostrado.getPublicaciones().isEmpty(), "El usuario no tiene publicaciones");
+
+        } catch (ExcepcionUsuarios e) {
+            fail("No se pudieron mostrar las publicaciones del usuario: ",e);
+        }
+    }
+
+    @Test
+    public void pruebaMostrarPublicacionConUnUsuarioQueNoExiste() throws ExcepcionPublicacion {
+        
+        try {
+                    // arrange
+        repositorioPublicacion.deleteAll();
+        repositorioUsuario.deleteAll();
+            // act
+            casosDeUsoPublicacion.mostrarPublicaciones("holaa");
+
+            // Si no se lanza ninguna excepción, la prueba debe fallar
+            fail("Se esperaba una UsuarioNoExisteException debido a la ausencia del usuario");
+        } catch (ExcepcionUsuarios e) {
+            // La excepción esperada fue lanzada, la prueba es exitosa
+        }
+
+    }
+
     
 }
+
+

@@ -33,7 +33,7 @@ import lombok.Setter;
     protected Boolean foto;
     protected Boolean lugar;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     protected Date fecha;
 
     @ManyToOne

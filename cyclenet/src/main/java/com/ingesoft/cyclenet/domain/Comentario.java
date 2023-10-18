@@ -1,5 +1,6 @@
 package com.ingesoft.cyclenet.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,14 +39,12 @@ public class Comentario {
 
 
     @OneToMany(mappedBy = "comentario")
-    List<Calificacion> calificaciones;
+    List<Calificacion> calificaciones = new ArrayList<>();
 
     public Comentario(String mensaje, Date fecha, Usuario usuario, Publicacion publicacion){
         this.mensaje = mensaje;
         this.fecha = fecha;
         this.usuario = usuario;
         this.publicacion = publicacion;
-    }
-
-    
+    }    
 }
