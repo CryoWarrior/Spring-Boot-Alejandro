@@ -1,0 +1,5 @@
+import tareas.model.Tarea;
+
+@Repository
+public interface TareasRepository extends JpaRepository<Tarea, Long> {
+}
