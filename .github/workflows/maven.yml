@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Descarga el proyecto
+    - name: Descarga el proyecto (Codigo fuente)
       uses: actions/checkout@v3
       
     - name: Set up JDK 17
@@ -26,9 +26,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-        
+    
     - name: Ejecutar mySQL
       run: cd cyclenet; docker compose up
     
-    - name: Build with Maven
-      run: mvn -B package --file cyclenet/pom.xml
+    - name: Compilar (Build with Maven) 
+      run: mvn -B package --file cyclenet/pom.xml -DskipTests
+      
+    - name: Pruebas
+      run: cd cyclenet; mvn test
+    
