@@ -13,9 +13,9 @@ on:
     
 jobs:
   compilar-probar:
-
+  
     runs-on: ubuntu-latest
-
+  
     steps:
     - name: Descarga el proyecto (Codigo fuente)
       uses: actions/checkout@v3
@@ -33,6 +33,12 @@ jobs:
     - name: Compilar (Build with Maven) 
       run: mvn -B package --file cyclenet/pom.xml -DskipTests
       
+  pruebas:
+    runs-on: ubuntu-latest
+
+    needs: compilar-probar
+
+    steps:
     - name: Pruebas
       run: cd cyclenet; mvn test
     
