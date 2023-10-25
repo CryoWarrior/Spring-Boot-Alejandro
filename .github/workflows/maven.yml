@@ -37,8 +37,18 @@ jobs:
 
     steps:
 
+    - name: Descarga el proyecto (Codigo fuente)
+      uses: actions/checkout@v3
+
     - name: Ejecutar mySQL
-      run: cd cyclenet; docker compose up
+      run: cd cyclenet; docker compose up -d
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
     
     - name: Ejecutar Pruebas
       run: cd cyclenet; mvn test
