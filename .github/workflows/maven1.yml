@@ -26,8 +26,8 @@ jobs:
         cache: maven
         
     - name: Compilar
-      run: mvn -B package -DskipTests
+      run: mvn -B package --file cyclenet/pom.xml -DskipTests
       
     - name: Test de Calificacion
-      run: mvn -B package -Dgroups="Calificacion"
+      run: mvn -B package --file cyclenet/pom.xml -DskipTests -Dgroups="Calificacion"
 
