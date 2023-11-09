@@ -29,4 +29,4 @@ jobs:
       run: mvn -B package --file cyclenet/pom.xml -DskipTests
       
     - name: Test de Calificacion
-      run: mvn test -Dgroups="Comentario"
+      run: cd cyclenet; mvn test -Dgroups="Comentario"
