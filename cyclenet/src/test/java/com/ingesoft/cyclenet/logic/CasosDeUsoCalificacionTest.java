@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -48,8 +49,10 @@ public class CasosDeUsoCalificacionTest {
         repositorioUsuario.deleteAll();
     }
 
+    
     @Transactional
     @Test
+    @Tag("Calificacion")
     public void pruebaSubirCalificacionPublicacionExitosamente(){
         try {
 
@@ -103,6 +106,7 @@ public class CasosDeUsoCalificacionTest {
 
     @Transactional
     @Test
+    @Tag("Calificacion")
     public void pruebaSubirCalificacionComentarioExitosamente(){
         try {
             //Arrange 
@@ -177,6 +181,7 @@ public class CasosDeUsoCalificacionTest {
     }
 
     @Test
+    @Tag("Calificacion")
     public void pruebaSubirCalifacionPublicacionFueraDeRango(){
         try {
             //Arrange 

@@ -11,6 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -49,6 +51,7 @@ public class CasosDeUsoUsuarioTest {
     //Casos de uso
     //Test login
     @Test
+    @Tag("Usuario")
     public void pruebaLoginFallidaPorUsuario(){
         try {
             //Arrange
@@ -67,6 +70,7 @@ public class CasosDeUsoUsuarioTest {
     }
 
     @Test
+    @Tag("Usuario")
     public void pruebaLoginFallidaPorContrasena(){
         try {
             //Arrange
@@ -85,6 +89,7 @@ public class CasosDeUsoUsuarioTest {
     }
 
     @Test
+    @Tag("Usuario")
     public void pruebaLoginAcertada(){
         try {
             //arange
@@ -111,6 +116,7 @@ public class CasosDeUsoUsuarioTest {
 
     //Tests registrar usuario
     @Test
+    @Tag("Usuario")
     public void registrarUsuarioSinErrores(){
         try {
 
@@ -138,6 +144,7 @@ public class CasosDeUsoUsuarioTest {
     }
 
     @Test
+    @Tag("Usuario")
     public void registrarUsuarioConLoginQueYaExiste(){
         try {
 
@@ -157,6 +164,7 @@ public class CasosDeUsoUsuarioTest {
     }
 
     @Test
+    @Tag("Usuario")
     public void registrarUsuarioConContrasenaDeMenosDe4Letras(){
         try {
             //Arrange
@@ -173,6 +181,7 @@ public class CasosDeUsoUsuarioTest {
     }
 
     @Test
+    @Tag("Usuario")
     public void registrarUsuarioConCorreoSinArroba(){
         try {
             //Arrange
@@ -189,6 +198,7 @@ public class CasosDeUsoUsuarioTest {
     }
 
     @Test
+    @Tag("Usuario")
     public void registrarUsuarioConCorreoSinPunto(){
         try {
             //Arrange

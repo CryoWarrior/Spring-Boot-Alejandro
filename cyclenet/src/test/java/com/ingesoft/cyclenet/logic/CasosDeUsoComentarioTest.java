@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -49,6 +50,7 @@ public class CasosDeUsoComentarioTest {
 
     @Transactional
     @Test
+    @Tag("Comentario")
     public void pruebaPublicarComentarioExitosamente(){
         try {
             // Arrange
@@ -103,6 +105,7 @@ public class CasosDeUsoComentarioTest {
     }
 
     @Test
+    @Tag("Comentario")
     public void pruebaPublicarComentarioConUsuarioQueNoExiste(){
         try {
             //Arrange
@@ -123,6 +126,7 @@ public class CasosDeUsoComentarioTest {
     }
 
     @Test
+    @Tag("Comentario")
     public void pruebaPublicarComentarioConPublicacionQueNoExiste(){
         try {
             //Arrange
@@ -143,6 +147,7 @@ public class CasosDeUsoComentarioTest {
     }
 
     @Test
+    @Tag("Comentario")
     @Transactional
     public void pruebaMostrarComentarios() throws ExcepcionPublicacion, ExcepcionComentario {
         
@@ -178,6 +183,7 @@ public class CasosDeUsoComentarioTest {
     }
 
     @Test
+    @Tag("Comentario")
     public void pruebaMostrarComentariosConUnUsuarioQueNoExiste() throws ExcepcionPublicacion, ExcepcionComentario {
         
         try {
