@@ -29,5 +29,5 @@ jobs:
       run: mvn -B package --file cyclenet/pom.xml -DskipTests
       
     - name: Test de Calificacion
-      run: mvn -B package --file cyclenet/pom.xml -DskipTests -Dgroups="Calificacion"
+      run: mvn -B package --file cyclenet/pom.xml -Dgroups="Calificacion"
 
