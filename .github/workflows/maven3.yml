@@ -13,7 +13,7 @@ on:
   workflow_dispatch
 
 jobs:
-  test_calificacion:
+  test_publicacion:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,5 +29,5 @@ jobs:
     - name: Compilar
       run: mvn -B package --file cyclenet/pom.xml -DskipTests
       
-    - name: Test de Calificacion
+    - name: Test de Publicacion
       run: cd cyclenet; mvn test -Dgroups="Publicacion"
