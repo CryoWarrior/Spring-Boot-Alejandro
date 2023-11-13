@@ -12,7 +12,7 @@ on:
   workflow_dispatch
 
 jobs:
-  test_calificacion:
+  test_comentario:
     runs-on: ubuntu-latest
 
     steps:
